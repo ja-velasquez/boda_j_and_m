@@ -82,7 +82,7 @@ button{font:inherit;color:inherit}
 /* ============================================================
    1. COVER
    ============================================================ */
-.cover{min-height:100vh;min-height:100svh;display:grid;align-content:end;padding:0;overflow:hidden}
+.cover{min-height:100svh;display:grid;align-content:end;padding:0;overflow:hidden}
 .cover .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(27,42,74,0) 0%,rgba(27,42,74,0) 70%,rgba(27,42,74,.35) 100%)}
 .cover .content{position:relative;text-align:center;padding:0 1.25rem clamp(4rem,12vh,7rem);display:grid;justify-items:center;gap:1.5rem}
 .cover h1{color:var(--ivory);text-shadow:0 2px 20px rgba(0,0,0,.35)}
@@ -93,14 +93,11 @@ button{font:inherit;color:inherit}
 /* ============================================================
    2. ENVELOPE + CARD
    ============================================================ */
-.envelope-sec{position:relative;min-height:100vh;min-height:100svh;display:grid;place-items:center;background:#121c33;padding:clamp(2.5rem,7vh,5rem) 1.25rem 5rem;overflow:hidden;isolation:isolate}
-.gated{display:none}
-#open-env:checked ~ main .gated,#open-env:checked ~ footer.gated,body.is-open .gated{display:block}
-#open-env:checked ~ main .cover.gated,#open-env:checked ~ main .countdown-sec.gated,body.is-open .cover.gated,body.is-open .countdown-sec.gated{display:grid}
-#open-env:focus-visible ~ main .seal{outline:2px solid var(--ivory);outline-offset:6px}
+.envelope-sec{position:relative;min-height:100svh;display:grid;place-items:center;background:#121c33;padding:clamp(2.5rem,7vh,5rem) 1.25rem 5rem;overflow:hidden;isolation:isolate}
+body.js:not(.is-open) .gated{display:none}
 .scroll-cue{position:absolute;left:50%;bottom:1.5rem;transform:translateX(-50%);color:rgba(253,251,247,.75);text-decoration:none;display:grid;justify-items:center;gap:.5rem;opacity:0;pointer-events:none;transition:opacity .6s 1s}
 .scroll-cue::after{content:"";width:1px;height:2.25rem;background:currentColor;opacity:.6}
-.envelope-sec.is-open .scroll-cue,#open-env:checked ~ main .scroll-cue{opacity:1;pointer-events:auto}
+.envelope-sec.is-open .scroll-cue{opacity:1;pointer-events:auto}
 .gated{animation:reveal .8s var(--ease) both}
 @keyframes reveal{from{opacity:0}to{opacity:1}}
 .envelope-sec::before,.envelope-sec::after{content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(40px);pointer-events:none}
@@ -143,10 +140,10 @@ button{font:inherit;color:inherit}
 .seal svg{position:absolute;inset:22%;width:56%;height:56%;opacity:.9}
 .seal:hover,.seal:focus-visible{transform:translate(-50%,-50%) scale(1.04)}
 .seal-hint{position:absolute;left:0;right:0;top:calc(82% + 3.6rem);text-align:center;color:rgba(253,251,247,.7);transition:opacity .4s}
-.envelope.is-open .env-flap,#open-env:checked ~ main .env-flap{transform:rotateX(180deg);opacity:0;pointer-events:none;transition:transform 1s var(--ease),opacity .45s ease .55s}
-.envelope.is-open .env-card,#open-env:checked ~ main .env-card{transform:none;opacity:1}
-.envelope.is-open .seal,.envelope.is-open .seal-hint,.envelope.is-open .monogram,#open-env:checked ~ main .seal,#open-env:checked ~ main .seal-hint,#open-env:checked ~ main .monogram{opacity:0;pointer-events:none}
-.envelope.is-open .florals,#open-env:checked ~ main .florals{opacity:.3;transform:translateY(6%)}
+.envelope.is-open .env-flap{transform:rotateX(180deg);opacity:0;pointer-events:none;transition:transform 1s var(--ease),opacity .45s ease .55s}
+.envelope.is-open .env-card{transform:none;opacity:1}
+.envelope.is-open .seal,.envelope.is-open .seal-hint,.envelope.is-open .monogram{opacity:0;pointer-events:none}
+.envelope.is-open .florals{opacity:.3;transform:translateY(6%)}
 
 /* ============================================================
    3. DATE — arch panel over a photo, church illustration
@@ -195,7 +192,7 @@ button{font:inherit;color:inherit}
 /* ============================================================
    5. COUNTDOWN BANNER + VERSE OVER PHOTO
    ============================================================ */
-.countdown-sec{position:relative;min-height:90vh;min-height:90svh;display:grid;grid-template-rows:auto 1fr auto;padding-bottom:clamp(3rem,8vh,5rem)}
+.countdown-sec{position:relative;min-height:90svh;display:grid;grid-template-rows:auto 1fr auto;padding-bottom:clamp(3rem,8vh,5rem)}
 .banner{
   background:var(--ivory);color:var(--navy);width:min(100%,30rem);margin:0 auto;padding:1.5rem 1.25rem 1.75rem;text-align:center;
   clip-path:polygon(0 0,100% 0,100% 78%,50% 100%,0 78%);position:relative;padding-bottom:3rem;
@@ -257,8 +254,7 @@ footer p + p{margin-top:.5rem}
 </head>
 
 <body>
-<input type="checkbox" id="open-env" class="visually-hidden" aria-controls="envCard">
-<span class="visually-hidden" id="open-env-label">Abrir la invitación</span>
+<script>document.body.classList.add('js');</script>
 
 
 <main>
@@ -310,14 +306,15 @@ footer p + p{margin-top:.5rem}
 
       <div class="env-flap" aria-hidden="true"></div>
 
-      <label class="seal" id="openSeal" for="open-env">
+      <button class="seal" id="openSeal" type="button" aria-expanded="false" aria-controls="envCard">
+        <span class="visually-hidden">Abrir la invitación</span>
         <svg viewBox="0 0 60 60" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
           <path d="M30 52 C 30 40, 30 26, 30 8"/>
           <path d="M30 40 C 22 38, 16 32, 15 24 C 23 26, 28 32, 30 40 Z"/><path d="M30 40 C 38 38, 44 32, 45 24 C 37 26, 32 32, 30 40 Z"/>
           <path d="M30 28 C 24 26, 20 21, 20 15 C 26 17, 29 22, 30 28 Z"/><path d="M30 28 C 36 26, 40 21, 40 15 C 34 17, 31 22, 30 28 Z"/>
           <circle cx="30" cy="8" r="1.6" fill="currentColor"/>
         </svg>
-      </label>
+      </button>
       <p class="seal-hint caps-sm" aria-hidden="true">Toca el sello</p>
     </div>
   </div>
@@ -533,14 +530,12 @@ const RSVP = {
 /* Envelope */
 (() => {
   const sec = document.getElementById('sobre'), env = document.getElementById('envelope');
-  const box = document.getElementById('open-env'), card = document.getElementById('envCard');
+  const seal = document.getElementById('openSeal'), card = document.getElementById('envCard');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  box.checked = false;                       // ignore any state the browser restored
-  box.setAttribute('aria-labelledby', 'open-env-label');
-  box.addEventListener('change', () => {
-    if (!box.checked || env.classList.contains('is-open')) { box.checked = true; return; }
+  seal.addEventListener('click', () => {
+    if (env.classList.contains('is-open')) return;
     env.classList.add('is-open'); sec.classList.add('is-open'); document.body.classList.add('is-open');
-    box.disabled = true;                     // once open, stays open
+    seal.setAttribute('aria-expanded', 'true');
     card.setAttribute('tabindex', '-1');
     setTimeout(() => card.focus({preventScroll:true}), reduce ? 0 : 900);
   });
